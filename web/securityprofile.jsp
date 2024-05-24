@@ -230,7 +230,7 @@
                             updatePs.close();
 
                             // Redirect to the profile page in view mode
-                            response.sendRedirect("adminprofile.jsp");
+                            response.sendRedirect("securityprofile.jsp");
                             return; // Stop further execution of the JSP
                         }
         %>

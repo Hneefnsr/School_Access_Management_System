@@ -30,7 +30,7 @@ public class SignUpServlet extends HttpServlet {
             String password = request.getParameter("password");
             String phoneNumber = request.getParameter("phone-number");
 
-            User user = new User();
+            Visitor user = new Visitor();
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setEmail(email);

@@ -4,7 +4,7 @@
     Author     : usee
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="SAMS.User"%>
+<%@page import="SAMS.Visitor"%>
 <%@page import="SAMS.visitorDAO"%>
 <%
     if (request.getMethod().equals("POST")) {
@@ -14,7 +14,7 @@
         String password = request.getParameter("password");
         String phoneNumber = request.getParameter("phone-number");
 
-        User user = new User();
+        Visitor user = new Visitor();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);

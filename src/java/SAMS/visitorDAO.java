@@ -19,7 +19,7 @@ public class visitorDAO {
     private static final String dbUsername = "admin";
     private static final String dbPassword = "admin";
 
-    public boolean insertUser(User user) {
+    public boolean insertUser(Visitor user) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);

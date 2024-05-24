@@ -6,9 +6,9 @@ package SAMS;
 
 /**
  *
- * @author User
+ * @author usee
  */
-public class User {
+public class Visitor {
 
     private String firstName;
     private String lastName;
@@ -58,4 +58,3 @@ public class User {
 
     // You may add additional methods or validation logic here
 }
-
