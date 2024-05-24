@@ -1,6 +1,6 @@
 <%-- 
-    Document   : adminProfile
-    Created on : May 24, 2024, 9:07:02 PM
+    Document   : securityprofile
+    Created on : May 24, 2024, 9:45:54 PM
     Author     : User
 --%>
 
@@ -189,26 +189,26 @@
                 try {
                     Class.forName("com.mysql.jdbc.Driver");
                     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/school_access_management", "admin", "admin");
-                    PreparedStatement ps = con.prepareStatement("SELECT * FROM administrator WHERE adminEmail = ?");
+                    PreparedStatement ps = con.prepareStatement("SELECT * FROM security WHERE securityEmail = ?");
                     ps.setString(1, Email);
                     ResultSet rs = ps.executeQuery();
 
                     if (rs.next()) {
-                        String FirstName = rs.getString("adminFirstName");
-                        String LastName = rs.getString("adminLastName");
-                        String Password = rs.getString("adminPassword");
-                        String PhoneNumber = rs.getString("adminPhone");
-                        Email = rs.getString("adminEmail");
-                        int adminID = rs.getInt("adminID");
-                        session.setAttribute("adminID", adminID);
+                        String FirstName = rs.getString("securityFirstName");
+                        String LastName = rs.getString("securityLastName");
+                        String Password = rs.getString("securityPassword");
+                        String PhoneNumber = rs.getString("securityPhone");
+                        Email = rs.getString("securityEmail");
+                        int securityID = rs.getInt("securityID");
+                        session.setAttribute("securityID", securityID);
                         boolean editMode = false;
 
                         if (request.getParameter("editMode") != null) {
                             editMode = Boolean.parseBoolean(request.getParameter("editMode"));
                         }
                         session = request.getSession();
-                        session.setAttribute("adminName", FirstName + " " + LastName);
-                        session.setAttribute("adminEmail", Email);
+                        session.setAttribute("securityName", FirstName + " " + LastName);
+                        session.setAttribute("securityEmail", Email);
 
                         if (request.getParameter("saveProfile") != null) {
                             // Retrieve the updated profile values from the request
@@ -219,7 +219,7 @@
                             String updatedPhoneNumber = request.getParameter("phone-number");
 
                             // Update the database with the new profile values
-                            PreparedStatement updatePs = con.prepareStatement("UPDATE administrator SET adminPhone = ?, adminPassword = ?, adminFirstName = ?, adminLastName = ? WHERE adminEmail = ?");
+                            PreparedStatement updatePs = con.prepareStatement("UPDATE security SET securityPhone = ?, securityPassword = ?, securityFirstName = ?, securityLastName = ? WHERE securityEmail = ?");
                             updatePs.setString(1, updatedPhoneNumber);
                             updatePs.setString(2, updatedPassword);
                             updatePs.setString(3, updatedFirstName);
@@ -239,13 +239,10 @@
                 <img src="png\skbd logo1.png" alt="School Logo" class="logo">
             </div>
 
-            <div class="buttons">
-                <button class="button"><a href="#" style="text-decoration: none; color: white;">Access Record</a></button>
-                <button class="button"><a href="#" style="text-decoration: none; color: white;">Create Account</a></button>
-                <button class="button"><a href="#" style="text-decoration: none; color: white;">Create Account</a></button>
+            <div class="buttons">                
+                <button class="button"><a href="#" style="text-decoration: none; color: white;">Visitors List</a></button>
                 <button class="button"><a href="homepage.jsp" style="text-decoration: none; color: white;">Log Out</a></button>
             </div>
-
         </header>
 
         <div id="sign-up-button">Profile Information</div>
