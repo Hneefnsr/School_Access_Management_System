@@ -4,17 +4,22 @@
  */
 package SAMS;
 
-/**
- *
- * @author User
- */
-public class User {
-
+public class Security {
+    private int id;
     private String firstName;
     private String lastName;
     private String email;
-    private String phoneNumber;
     private String password;
+    private String phoneNumber;
+
+    // Getters and setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -40,14 +45,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -56,6 +53,12 @@ public class User {
         this.password = password;
     }
 
-    // You may add additional methods or validation logic here
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 }
 

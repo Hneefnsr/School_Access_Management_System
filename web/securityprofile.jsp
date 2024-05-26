@@ -26,10 +26,10 @@
 
             header {
                 background-color: #949bac;
-                color: white;
+                color: white;   
                 display: flex;
-                align-items: center;
                 justify-content: space-between;
+                align-items: center;
             }
 
             .logo-container {

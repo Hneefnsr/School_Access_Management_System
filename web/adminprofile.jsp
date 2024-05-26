@@ -26,10 +26,10 @@
 
             header {
                 background-color: #949bac;
-                color: white;
+                color: white;   
                 display: flex;
-                align-items: center;
                 justify-content: space-between;
+                align-items: center;
             }
 
             .logo-container {
@@ -241,8 +241,7 @@
 
             <div class="buttons">
                 <button class="button"><a href="#" style="text-decoration: none; color: white;">Access Record</a></button>
-                <button class="button"><a href="#" style="text-decoration: none; color: white;">Create Account</a></button>
-                <button class="button"><a href="#" style="text-decoration: none; color: white;">Create Account</a></button>
+                <button class="button"><a href="stafflist.jsp" style="text-decoration: none; color: white;">Staff Lists</a></button>
                 <button class="button"><a href="homepage.jsp" style="text-decoration: none; color: white;">Log Out</a></button>
             </div>
 
@@ -321,7 +320,7 @@
             </form>
             <%
                         } else {
-                            out.println("No teacher profile found.");
+                            out.println("No admin profile found.");
                         }
                         rs.close();
                         ps.close();
