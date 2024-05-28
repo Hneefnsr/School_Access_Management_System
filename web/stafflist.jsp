@@ -12,7 +12,6 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://fontawesome.com/icons/check-to-slot?f=classic&s=solid" integrity="sha512-xxx" crossorigin="anonymous" />
         <title>Staff List</title>
         <style>
             body {
@@ -144,51 +143,96 @@
         <div id="sign-up-button">Staff List</div>
         <button class="button2"><a href="addstaff.jsp" style="text-decoration: none; color: white;">Add Staff</a></button>
         <div class="container">
+            <%
+                // Database connection details
+                String dbURL = "jdbc:mysql://localhost:3306/school_access_management";
+                String dbUser = "admin";
+                String dbPassword = "admin";
+
+                if ("POST".equals(request.getMethod()) && "delete".equals(request.getParameter("action"))) {
+                    // Get the ID to delete
+                    int idToDelete = Integer.parseInt(request.getParameter("id"));
+
+                    try {
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+                        // Delete from the teacher table
+                        String deleteQueryTeacher = "DELETE FROM teacher WHERE teacherID = ?";
+                        PreparedStatement deleteStatementTeacher = connection.prepareStatement(deleteQueryTeacher);
+                        deleteStatementTeacher.setInt(1, idToDelete);
+                        int rowsAffectedTeacher = deleteStatementTeacher.executeUpdate();
+                        deleteStatementTeacher.close();
+
+                        // Delete from the security table
+                        String deleteQuerySecurity = "DELETE FROM security WHERE securityID = ?";
+                        PreparedStatement deleteStatementSecurity = connection.prepareStatement(deleteQuerySecurity);
+                        deleteStatementSecurity.setInt(1, idToDelete);
+                        int rowsAffectedSecurity = deleteStatementSecurity.executeUpdate();
+                        deleteStatementSecurity.close();
+
+                        connection.close();
+
+                        // If at least one row is affected in either table, print success message
+                        if (rowsAffectedTeacher > 0 || rowsAffectedSecurity > 0) {
+                            out.println("<script>alert('Staff member deleted successfully.');</script>");
+                        } else {
+                            out.println("<script>alert('No staff member found with the given ID.');</script>");
+                        }
+                    } catch (Exception e) {
+                        // Handle database connection or query errors
+                        out.println("<script>alert('An error occurred while deleting staff data: " + e.getMessage() + "');</script>");
+                    }
+                }
+            %>
             <h2>Teachers</h2>
             <table id="teachers-table">
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                        <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
+                        <<th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <%
                         // Database connection details
-                        String dbURL = "jdbc:mysql://localhost:3306/school_access_management";
-                        String dbUser = "admin";
-                        String dbPassword = "admin";
-
                         try {
                             // Establish a database connection
                             Class.forName("com.mysql.jdbc.Driver");
                             Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
                             // Retrieve all teachers
-                            String selectQueryTeachers = "SELECT teacherFirstName, teacherLastName, teacherEmail, teacherPhone FROM teacher";
+                            String selectQueryTeachers = "SELECT teacherID, teacherFirstName, teacherLastName, teacherEmail, teacherPhone FROM teacher";
                             Statement statementTeachers = connection.createStatement();
                             ResultSet resultSetTeachers = statementTeachers.executeQuery(selectQueryTeachers);
 
                             // Display the data in the table
                             int rowNumber = 1;
                             while (resultSetTeachers.next()) {
+                                int ID = resultSetTeachers.getInt("teacherID");
                                 String firstName = resultSetTeachers.getString("teacherFirstName");
                                 String lastName = resultSetTeachers.getString("teacherLastName");
                                 String email = resultSetTeachers.getString("teacherEmail");
                                 String phone = resultSetTeachers.getString("teacherPhone");
 
                                 // Add a row to the table
+                                out.println(ID);
                                 out.println("<tr>");
                                 out.println("<td>" + rowNumber + "</td>");
-                                out.println("<td>" + firstName + "</td>");
-                                out.println("<td>" + lastName + "</td>");
+                                out.println("<td>" + firstName + " " + lastName + "</td>");
                                 out.println("<td>" + email + "</td>");
                                 out.println("<td>" + phone + "</td>");
-                                out.println("</tr>");
 
+                                // Add a delete button with confirmation dialog
+                                out.println("<td>");
+                                out.println("<input type='hidden' name='email' value='" + email + "'>");
+                                out.println("<button onclick=\"deleteStaff(" + resultSetTeachers.getInt("teacherID") + ")\">Delete</button>");
+                                out.println("</form>");
+                                out.println("</td>");
+                                out.println("</tr>");
                                 rowNumber++;
                             }
 
@@ -207,10 +251,10 @@
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                        <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
+                        <<th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -221,27 +265,34 @@
                             Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
                             // Retrieve all security guards
-                            String selectQuerySecurity = "SELECT securityFirstName, securityLastName, securityEmail, securityPhone FROM security";
+                            String selectQuerySecurity = "SELECT securityID, securityFirstName, securityLastName, securityEmail, securityPhone FROM security";
                             Statement statementSecurity = connection.createStatement();
                             ResultSet resultSetSecurity = statementSecurity.executeQuery(selectQuerySecurity);
 
                             // Display the data in the table
                             int rowNumber = 1;
                             while (resultSetSecurity.next()) {
+                                int ID = resultSetSecurity.getInt("securityID");
                                 String firstName = resultSetSecurity.getString("securityFirstName");
                                 String lastName = resultSetSecurity.getString("securityLastName");
                                 String email = resultSetSecurity.getString("securityEmail");
                                 String phone = resultSetSecurity.getString("securityPhone");
 
                                 // Add a row to the table
+                                out.println(ID);
                                 out.println("<tr>");
                                 out.println("<td>" + rowNumber + "</td>");
-                                out.println("<td>" + firstName + "</td>");
-                                out.println("<td>" + lastName + "</td>");
+                                out.println("<td>" + firstName + " " + lastName + "</td>");
                                 out.println("<td>" + email + "</td>");
                                 out.println("<td>" + phone + "</td>");
-                                out.println("</tr>");
 
+                                // Add a delete button with confirmation dialog
+                                out.println("<td>");
+                                out.println("<input type='hidden' name='email' value='" + email + "'>");
+                                out.println("<button onclick=\"deleteStaff(" + resultSetSecurity.getInt("securityID") + ")\">Delete</button>");
+                                out.println("</form>");
+                                out.println("</td>");
+                                out.println("</tr>");
                                 rowNumber++;
                             }
 
@@ -257,6 +308,26 @@
                 </tbody>
             </table>
         </div>
+        <script>
+            function deleteStaff(id) {
+                if (confirm("Are you sure to delete this staff?")) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "stafflist.jsp", true);
+                    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === XMLHttpRequest.DONE) {
+                            if (xhr.status === 200) {
+                                // Reload the page after successful deletion
+                                window.location.reload();
+                            } else {
+                                alert("An error occurred while deleting staff data.");
+                            }
+                        }
+                    };
+                    xhr.send("action=delete&id=" + id);
+                }
+            }
+        </script>
         <footer>
             <p>&copy; 2024 Sekolah Kebangsaan Bukit Damansara. All rights reserved.</p>
         </footer>

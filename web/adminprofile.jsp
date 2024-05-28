@@ -240,7 +240,7 @@
             </div>
 
             <div class="buttons">
-                <button class="button"><a href="#" style="text-decoration: none; color: white;">Access Record</a></button>
+                <button class="button"><a href="accessrecord.jsp" style="text-decoration: none; color: white;">Access Record</a></button>
                 <button class="button"><a href="stafflist.jsp" style="text-decoration: none; color: white;">Staff Lists</a></button>
                 <button class="button"><a href="homepage.jsp" style="text-decoration: none; color: white;">Log Out</a></button>
             </div>
