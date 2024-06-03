@@ -26,7 +26,7 @@
 
             header {
                 background-color: #949bac;
-                color: white;   
+                color: white;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -240,7 +240,7 @@
             </div>
 
             <div class="buttons">                
-                <button class="button"><a href="#" style="text-decoration: none; color: white;">Visitors List</a></button>
+                <button class="button"><a href="visitorlist.jsp" style="text-decoration: none; color: white;">Visitors List</a></button>
                 <button class="button"><a href="homepage.jsp" style="text-decoration: none; color: white;">Log Out</a></button>
             </div>
         </header>

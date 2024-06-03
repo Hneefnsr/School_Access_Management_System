@@ -185,6 +185,7 @@
                     }
                 }
             %>
+            <br>
             <h2>Teachers</h2>
             <table id="teachers-table">
                 <thead>
@@ -193,7 +194,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <<th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -219,7 +220,6 @@
                                 String phone = resultSetTeachers.getString("teacherPhone");
 
                                 // Add a row to the table
-                                out.println(ID);
                                 out.println("<tr>");
                                 out.println("<td>" + rowNumber + "</td>");
                                 out.println("<td>" + firstName + " " + lastName + "</td>");
@@ -246,7 +246,9 @@
                     %>
                 </tbody>
             </table>
+            <br><br>
             <h2>Security Guards</h2>
+
             <table id="security-table">
                 <thead>
                     <tr>
@@ -254,7 +256,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <<th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -279,7 +281,6 @@
                                 String phone = resultSetSecurity.getString("securityPhone");
 
                                 // Add a row to the table
-                                out.println(ID);
                                 out.println("<tr>");
                                 out.println("<td>" + rowNumber + "</td>");
                                 out.println("<td>" + firstName + " " + lastName + "</td>");

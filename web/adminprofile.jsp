@@ -26,7 +26,7 @@
 
             header {
                 background-color: #949bac;
-                color: white;   
+                color: white;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;

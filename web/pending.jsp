@@ -37,8 +37,8 @@
                 align-items: center;
             }
 
-            
-            
+
+
             .logo {
                 margin-left: 70px;
                 width: 110px;
