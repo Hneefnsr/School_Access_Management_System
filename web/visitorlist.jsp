@@ -116,83 +116,98 @@
             </div>
         </header>
         <h2>Visitors List</h2>
-        <form action="RecordCheckInOutServlet" method="POST">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Number</th>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Check In Time</th>
-                        <th>Check Out Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%
-                        // Database connection details
-                        String dbURL = "jdbc:mysql://localhost:3306/school_access_management";
-                        String dbUser = "admin";
-                        String dbPassword = "admin";
+        <table>
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Appointment Time</th>
+                    <th>Check In Time</th>
+                    <th>Check Out Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%
+                    // Database connection details
+                    String dbURL = "jdbc:mysql://localhost:3306/school_access_management";
+                    String dbUser = "admin";
+                    String dbPassword = "admin";
 
-                        // Retrieve securityID from session
-                        session = request.getSession();
-                        Integer securityID = (Integer) session.getAttribute("securityID");
+                    // Retrieve securityID from session
+                    session = request.getSession();
+                    Integer securityID = (Integer) session.getAttribute("securityID");
 
-                        if (securityID == null || securityID == 0) {
-                            out.println("<tr><td colspan='7'>Error: Security ID not found in session. Please log in again.</td></tr>");
-                        } else {
-                            try {
-                                // Establish a database connection
-                                Class.forName("com.mysql.jdbc.Driver");
-                                Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+                    if (securityID == null || securityID == 0) {
+                        out.println("<tr><td colspan='7'>Error: Security ID not found in session. Please log in again.</td></tr>");
+                    } else {
+                        try {
+                            // Establish a database connection
+                            Class.forName("com.mysql.jdbc.Driver");
+                            Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
-                                // Retrieve approved visitor requests and their check-in/check-out times
-                                String selectQuery = "SELECT r.requestID, v.visitorFirstName, v.visitorLastName, r.visitDate, r.visitTime, rec.checkInTime, rec.checkOutTime "
-                                        + "FROM request r "
-                                        + "JOIN visitor v ON r.visitorID = v.visitorID "
-                                        + "LEFT JOIN record rec ON r.requestID = rec.requestID "
-                                        + "WHERE r.visitStatus = 'Approved'";
-                                Statement statement = connection.createStatement();
-                                ResultSet resultSet = statement.executeQuery(selectQuery);
+                            // Retrieve approved visitor requests and their check-in/check-out times
+                            String selectQuery = "SELECT r.requestID, v.visitorFirstName, v.visitorLastName, r.visitDate, r.visitTime, rec.checkinTime, rec.checkoutTime "
+                                    + "FROM request r "
+                                    + "JOIN visitor v ON r.visitorID = v.visitorID "
+                                    + "LEFT JOIN record rec ON r.requestID = rec.requestID "
+                                    + "WHERE r.visitStatus = 'Approved'";
+                            Statement statement = connection.createStatement();
+                            ResultSet resultSet = statement.executeQuery(selectQuery);
 
-                                // Display the data in the table
-                                int number = 1;
-                                while (resultSet.next()) {
-                                    int requestID = resultSet.getInt("requestID");
-                                    String visitorFirstName = resultSet.getString("visitorFirstName");
-                                    String visitorLastName = resultSet.getString("visitorLastName");
-                                    Date visitDate = resultSet.getDate("visitDate");
-                                    Time visitTime = resultSet.getTime("visitTime");
-                                    Time checkInTime = resultSet.getTime("checkInTime");
-                                    Time checkOutTime = resultSet.getTime("checkOutTime");
+                            // Display the data in the table
+                            int number = 1;
+                            while (resultSet.next()) {
+                                int requestID = resultSet.getInt("requestID");
+                                String visitorFirstName = resultSet.getString("visitorFirstName");
+                                String visitorLastName = resultSet.getString("visitorLastName");
+                                Date visitDate = resultSet.getDate("visitDate");
+                                Time visitTime = resultSet.getTime("visitTime");
+                                Time checkInTime = resultSet.getTime("checkinTime");
+                                Time checkOutTime = resultSet.getTime("checkoutTime");
 
-                                    // Output table row for each request
-                                    out.println("<tr>");
-                                    out.println("<td>" + number++ + "</td>");
-                                    out.println("<td>" + visitorFirstName + " " + visitorLastName + "</td>");
-                                    out.println("<td>" + visitDate + "</td>");
-                                    out.println("<td>" + visitTime + "</td>");
-                                    out.println("<td><input type='time' name='checkInTime_" + requestID + "' value='" + (checkInTime != null ? checkInTime : "") + "'><button type='submit' name='action' value='checkIn_" + requestID + "'>Submit</button></td>");
-                                    out.println("<td><input type='time' name='checkOutTime_" + requestID + "' value='" + (checkOutTime != null ? checkOutTime : "") + "'><button type='submit' name='action' value='checkOut_" + requestID + "'>Submit</button></td>");
-                                    out.println("</tr>");
-                                }
-
-                                // Close the ResultSet and Statement
-                                resultSet.close();
-                                statement.close();
-                                connection.close();
-                            } catch (Exception e) {
-                                // Handle database connection or query errors
-                                out.println("<tr><td colspan='7'>Error retrieving data: " + e.getMessage() + "</td></tr>");
+                                // Output table row for each request
+                                out.println("<tr>");
+                                out.println("<td>" + number++ + "</td>");
+                                out.println("<td>" + visitorFirstName + " " + visitorLastName + "</td>");
+                                out.println("<td>" + visitDate + "</td>");
+                                out.println("<td>" + visitTime + "</td>");
+                                out.println("<td>");
+                                out.println("<form action='RecordCheckInOutServlet' method='POST'>");
+                                out.println("<input type='hidden' name='action' value='checkIn_" + requestID + "'>");
+                                out.println("<input type='time' name='checkInTime' value='" + (checkInTime != null ? checkInTime.toString() : "") + "'>");
+                                out.println("<input type='hidden' name='securityID' value='" + securityID + "'>");
+                                out.println("<button onclick=\"confirmSubmission()\" type='submit'>Submit</button>");
+                                out.println("</form>");
+                                out.println("</td>");
+                                out.println("<td>");
+                                out.println("<form action='RecordCheckInOutServlet' method='POST'>");
+                                out.println("<input type='hidden' name='action' value='checkOut_" + requestID + "'>");
+                                out.println("<input type='time' name='checkOutTime' value='" + (checkOutTime != null ? checkOutTime.toString() : "") + "'>");
+                                out.println("<input type='hidden' name='securityID' value='" + securityID + "'>");
+                                out.println("<button onclick=\"confirmSubmission()\" type='submit'>Submit</button>");
+                                out.println("</form>");
+                                out.println("</td>");
+                                out.println("</tr>");
                             }
+
+                            // Close the ResultSet and Statement
+                            resultSet.close();
+                            statement.close();
+                            connection.close();
+                        } catch (Exception e) {
+                            // Handle database connection or query errors
+                            out.println("<tr><td colspan='7'>Error retrieving data: " + e.getMessage() + "</td></tr>");
                         }
-                    %>
-                </tbody>
-            </table>
-            <input type="hidden" name="securityID" value="<%= securityID%>">
-        </form>
+                    }
+                %>
+            </tbody>
+        </table>
+        <script>
+            function confirmSubmission(formId) {
+                alert("Submission successful!");
+            }
+
+        </script>
     </body>
 </html>
-
-

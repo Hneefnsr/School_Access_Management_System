@@ -10,7 +10,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,8 +36,8 @@ public class RecordCheckInOutServlet extends HttpServlet {
             String actionType = actionParts[0];
             int requestID = Integer.parseInt(actionParts[1]);
 
-            String checkInTime = request.getParameter("checkInTime_" + requestID);
-            String checkOutTime = request.getParameter("checkOutTime_" + requestID);
+            String checkInTime = request.getParameter("checkInTime");
+            String checkOutTime = request.getParameter("checkOutTime");
 
             String selectQuery = "SELECT * FROM record WHERE requestID = ?";
             PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
@@ -47,22 +46,40 @@ public class RecordCheckInOutServlet extends HttpServlet {
 
             if (resultSet.next()) {
                 // Record exists, update it
-                String updateQuery = "UPDATE record SET checkInTime = ?, checkOutTime = ? WHERE requestID = ?";
-                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-                updateStatement.setTime(1, checkInTime != null && !checkInTime.isEmpty() ? Time.valueOf(checkInTime + ":00") : null);
-                updateStatement.setTime(2, checkOutTime != null && !checkOutTime.isEmpty() ? Time.valueOf(checkOutTime + ":00") : null);
-                updateStatement.setInt(3, requestID);
-                updateStatement.executeUpdate();
-                updateStatement.close();
+                if ("checkIn".equals(actionType)) {
+                    String updateQuery = "UPDATE record SET checkinTime = ? WHERE requestID = ?";
+                    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                    updateStatement.setString(1, checkInTime);
+                    updateStatement.setInt(2, requestID);
+                    updateStatement.executeUpdate();
+                    updateStatement.close();
+                } else if ("checkOut".equals(actionType)) {
+                    String updateQuery = "UPDATE record SET checkoutTime = ? WHERE requestID = ?";
+                    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                    updateStatement.setString(1, checkOutTime);
+                    updateStatement.setInt(2, requestID);
+                    updateStatement.executeUpdate();
+                    updateStatement.close();
+                }
             } else {
                 // Record does not exist, insert it
-                String insertQuery = "INSERT INTO record (requestID, checkInTime, checkOutTime) VALUES (?, ?, ?)";
-                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
-                insertStatement.setInt(1, requestID);
-                insertStatement.setTime(2, checkInTime != null && !checkInTime.isEmpty() ? Time.valueOf(checkInTime + ":00") : null);
-                insertStatement.setTime(3, checkOutTime != null && !checkOutTime.isEmpty() ? Time.valueOf(checkOutTime + ":00") : null);
-                insertStatement.executeUpdate();
-                insertStatement.close();
+                if ("checkIn".equals(actionType)) {
+                    String insertQuery = "INSERT INTO record (requestID, checkinTime, securityID) VALUES (?, ?, ?)";
+                    PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                    insertStatement.setInt(1, requestID);
+                    insertStatement.setString(2, checkInTime);
+                    insertStatement.setInt(3, Integer.parseInt(request.getParameter("securityID")));
+                    insertStatement.executeUpdate();
+                    insertStatement.close();
+                } else if ("checkOut".equals(actionType)) {
+                    String insertQuery = "INSERT INTO record (requestID, checkoutTime, securityID) VALUES (?, ?, ?)";
+                    PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                    insertStatement.setInt(1, requestID);
+                    insertStatement.setString(2, checkOutTime);
+                    insertStatement.setInt(3, Integer.parseInt(request.getParameter("securityID")));
+                    insertStatement.executeUpdate();
+                    insertStatement.close();
+                }
             }
 
             resultSet.close();
@@ -79,6 +96,8 @@ public class RecordCheckInOutServlet extends HttpServlet {
             }
         }
 
+        // Redirect back to visitorlist.jsp
         response.sendRedirect("visitorlist.jsp");
     }
+
 }

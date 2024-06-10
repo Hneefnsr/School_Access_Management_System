@@ -11,7 +11,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Report</title>
+        <title>Record</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -150,6 +150,7 @@
                     <th>Status</th>
                     <th>Check In Time</th>
                     <th>Check Out Time</th>
+                    <th>Security On Duty</th>
                 </tr>
             </thead>
             <tbody>
@@ -164,11 +165,12 @@
                         Class.forName("com.mysql.jdbc.Driver");
                         Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
-                        // Retrieve visitor requests with their check-in and check-out times
-                        String selectQuery = "SELECT v.visitorFirstName, v.visitorLastName, r.visitPurpose, r.visitDate, r.visitTime, r.visitStatus, rec.checkInTime, rec.checkOutTime "
+                        // Retrieve visitor requests with their check-in and check-out times and security names
+                        String selectQuery = "SELECT v.visitorFirstName, v.visitorLastName, r.visitPurpose, r.visitDate, r.visitTime, r.visitStatus, rec.checkinTime, rec.checkoutTime, s.securityFirstname, s.securityLastname "
                                 + "FROM request r "
                                 + "JOIN visitor v ON r.visitorID = v.visitorID "
-                                + "LEFT JOIN record rec ON r.requestID = rec.recordID";
+                                + "LEFT JOIN record rec ON r.requestID = rec.requestID "
+                                + "LEFT JOIN security s ON rec.securityID = s.securityID"; // Joined with the security table
                         Statement statement = connection.createStatement();
                         ResultSet resultSet = statement.executeQuery(selectQuery);
 
@@ -180,8 +182,11 @@
                             Date visitDate = resultSet.getDate("visitDate");
                             Time visitTime = resultSet.getTime("visitTime");
                             String visitStatus = resultSet.getString("visitStatus");
-                            Time checkInTime = resultSet.getTime("checkInTime");
-                            Time checkOutTime = resultSet.getTime("checkOutTime");
+                            Time checkInTime = resultSet.getTime("checkinTime");
+                            Time checkOutTime = resultSet.getTime("checkoutTime");
+                            String securityFirstname = resultSet.getString("securityFirstname");
+                            String securityLastname = resultSet.getString("securityLastname");
+                            
 
                             // Output table row for each request
                             out.println("<tr>");
@@ -192,6 +197,7 @@
                             out.println("<td>" + visitStatus + "</td>");
                             out.println("<td>" + (checkInTime != null ? checkInTime : "N/A") + "</td>");
                             out.println("<td>" + (checkOutTime != null ? checkOutTime : "N/A") + "</td>");
+                            out.println("<td>" + (securityFirstname != null ? securityFirstname : "") +" "+ (securityLastname != null ? securityLastname : "N/A") + "</td>");
                             out.println("</tr>");
                         }
 
@@ -200,8 +206,8 @@
                         statement.close();
                         connection.close();
                     } catch (Exception e) {
-                        // Handle database connection or query errors
-                        out.println("<tr><td colspan='7'>Error retrieving data: " + e.getMessage() + "</td></tr>");
+                        e.printStackTrace(); // Log the error to the server logs
+                        out.println("<tr><td colspan='8'>Error retrieving data: " + e.getMessage() + "</td></tr>");
                     }
                 %>
             </tbody>
