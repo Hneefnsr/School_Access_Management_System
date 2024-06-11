@@ -146,7 +146,7 @@
                     <th>First Name</th>
                     <th>Visit Purpose</th>
                     <th>Date</th>
-                    <th>Time</th>
+                    <th>Meeting Time</th>
                     <th>Status</th>
                     <th>Check In Time</th>
                     <th>Check Out Time</th>
@@ -195,9 +195,9 @@
                             out.println("<td>" + visitDate + "</td>");
                             out.println("<td>" + visitTime + "</td>");
                             out.println("<td>" + visitStatus + "</td>");
-                            out.println("<td>" + (checkInTime != null ? checkInTime : "N/A") + "</td>");
-                            out.println("<td>" + (checkOutTime != null ? checkOutTime : "N/A") + "</td>");
-                            out.println("<td>" + (securityFirstname != null ? securityFirstname : "") +" "+ (securityLastname != null ? securityLastname : "N/A") + "</td>");
+                            out.println("<td>" + (checkInTime != null ? checkInTime : "--:--") + "</td>");
+                            out.println("<td>" + (checkOutTime != null ? checkOutTime : "--:--") + "</td>");
+                            out.println("<td>" + (securityFirstname != null ? securityFirstname : "") +" "+ (securityLastname != null ? securityLastname : "-") + "</td>");
                             out.println("</tr>");
                         }
 

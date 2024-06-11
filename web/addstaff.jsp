@@ -216,24 +216,24 @@
         <form method="post" action="AddStaffServlet">
             <div>
                 <label for="firstname">First name:</label>
-                <input type="text" placeholder="Enter your First Name" id="firstname" name="first-name" required onkeypress="allowOnlyAlphabeticInput(event)">
+                <input type="text" placeholder="Enter First Name" id="firstname" name="first-name" required onkeypress="allowOnlyAlphabeticInput(event)">
             </div>
             <div>
                 <label for="lastname">Last name:</label>
-                <input type="text" placeholder="Enter your Last Name" id="lastname" name="last-name" required onkeypress="allowOnlyAlphabeticInput(event)">
+                <input type="text" placeholder="Enter Last Name" id="lastname" name="last-name" required onkeypress="allowOnlyAlphabeticInput(event)">
             </div>
             <div>
                 <label for="email">Email Address:</label>
-                <input type="email" placeholder="Enter your Email" id="email" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
+                <input type="email" placeholder="Enter Email" id="email" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required>
             </div>
             <div>
                 <label for="phonenumber">Phone Number:</label>
-                <input type="tel" placeholder="Enter your Phone Number" id="phonenumber" name="phone-number" onkeypress="allowOnlyNumericInput(event)" maxlength="11" required>
+                <input type="tel" placeholder="Enter Phone Number" id="phonenumber" name="phone-number" onkeypress="allowOnlyNumericInput(event)" maxlength="11" required>
             </div>
             <div class="password-container">
                 <label for="password">Password:</label>
                 <div style="position: relative;">
-                    <input type="password" placeholder="Enter your Password" id="password" name="password" oninput="validatePassword(this)" required>
+                    <input type="password" placeholder="Enter Password" id="password" name="password" oninput="validatePassword(this)" required>
                     <span class="eye-icon" onclick="togglePasswordVisibility()">&#128065;</span>
                 </div>
                 <div id="passwordError" style="color: red"></div>
