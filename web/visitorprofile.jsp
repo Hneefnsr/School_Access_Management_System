@@ -241,7 +241,7 @@
 
             <div class="buttons">
                 <button class="button"><a href="accessform.jsp" style="text-decoration: none; color: white;">New Request</a></button>
-                <button class="button"><a href="pending.jsp" style="text-decoration: none; color: white;">Pending Request</a></button>
+                <button class="button"><a href="pending.jsp" style="text-decoration: none; color: white;">Requests Status</a></button>
                 <button class="button"><a href="homepage.jsp" style="text-decoration: none; color: white;">Log Out</a></button>
             </div>
 

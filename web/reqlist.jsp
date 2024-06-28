@@ -132,7 +132,7 @@
     <body>
         <header>
             <div class="logo-container">
-                <img src="png\skbd logo1.png" alt="School Logo" class="logo">
+                <img src="png/skbd logo1.png" alt="School Logo" class="logo">
                 <span class="system-name">Sekolah Kebangsaan Bukit Damansara Access Permission System</span>
             </div>
 
@@ -153,7 +153,8 @@
                         <th>Date</th>
                         <th>Time</th>
                         <th>Status</th>
-                        <th></th>
+                        <th>Action</th>
+                        <th>Notes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -170,12 +171,15 @@
                             Class.forName("com.mysql.jdbc.Driver");
                             Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
-                            // Retrieve pending requests
-                        String selectQuery = "SELECT r.*, CONCAT(v.visitorFirstName, ' ', v.visitorLastName) AS visitorName " +
-                                             "FROM request r " +
-                                             "INNER JOIN visitor v ON r.visitorID = v.visitorID";
-                        PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
-                        ResultSet resultSet = preparedStatement.executeQuery();
+                            // Retrieve pending requests and their associated approval notes
+                            String selectQuery = "SELECT r.*, CONCAT(v.visitorFirstName, ' ', v.visitorLastName) AS visitorName, a.notes "
+                                    + "FROM request r "
+                                    + "INNER JOIN visitor v ON r.visitorID = v.visitorID "
+                                    + "LEFT JOIN approval a ON r.requestID = a.requestID "
+                                    + "AND a.teacherID = ?";
+                            PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+                            preparedStatement.setInt(1, teacherID);
+                            ResultSet resultSet = preparedStatement.executeQuery();
 
                             // Display the data in the table
                             int rowNumber = 1;
@@ -185,6 +189,7 @@
                                 String date = resultSet.getString("visitDate");
                                 String time = resultSet.getString("visitTime");
                                 String status = resultSet.getString("visitStatus");
+                                String notes = resultSet.getString("notes");
 
                                 // Add a row to the table
                                 out.println("<tr>");
@@ -210,6 +215,10 @@
                                 }
                                 out.println("</td>");
 
+                                // Add a column for notes
+                                out.println("<td>" + (notes != null ? notes : "") + "</td>");
+
+                                out.println("</tr>");
                                 rowNumber++;
                             }
 
@@ -226,28 +235,30 @@
             </table>
         </div>
 
-
         <script>
-            function addVisitRow(no, visitPurpose, date, time, status) {
-                const table = document.getElementById('visits-table');
-                const row = table.insertRow();
-                const cells = ['No.', 'Visit Purpose', 'Date', 'Time', 'Status'];
-
-                cells.forEach((cell, index) => {
-                    const cellElement = row.insertCell(index);
-                    cellElement.textContent = index === 0 ? no : eval(cell);
-                });
-            }
-
             function approveRequest(requestID) {
-                updateStatus(requestID, 'Approved');
+                var notes = prompt("Please enter notes for approval:");
+                if (notes === null || notes.trim() === "") {
+                    // User cancelled the prompt or entered empty notes
+                    return;
+                }
+                console.log("Approve Notes: ", notes);
+                updateStatus(requestID, 'Approved', notes);
             }
 
             function rejectRequest(requestID) {
-                updateStatus(requestID, 'Rejected');
+                var notes = prompt("Please enter notes for rejection:");
+                if (notes === null || notes.trim() === "") {
+                    // User cancelled the prompt or entered empty notes
+                    return;
+                }
+                console.log("Reject Notes: ", notes);
+                updateStatus(requestID, 'Rejected', notes);
             }
 
-            function updateStatus(requestID, newStatus, teacherID) {
+            function updateStatus(requestID, newStatus, notes) {
+                console.log("Update Status Request - ID: ", requestID, " Status: ", newStatus, " Notes: ", notes);
+
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
@@ -258,10 +269,10 @@
 
                 xhr.open("POST", "updateStatus", true);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send("requestID=" + requestID + "&newStatus=" + newStatus + "&teacherID=" + teacherID);
+                xhr.send("requestID=" + requestID + "&newStatus=" + newStatus + "&notes=" + encodeURIComponent(notes));
             }
-
         </script>
+
         <footer>
             <p>&copy; 2024 Sekolah Kebangsaan Bukit Damansara. All rights reserved.</p>
         </footer>

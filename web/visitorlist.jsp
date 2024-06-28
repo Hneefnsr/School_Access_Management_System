@@ -4,7 +4,7 @@
     Author     : User
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <!DOCTYPE html>
 <html>
@@ -175,17 +175,17 @@
                                 out.println("<td>");
                                 out.println("<form action='RecordCheckInOutServlet' method='POST'>");
                                 out.println("<input type='hidden' name='action' value='checkIn_" + requestID + "'>");
-                                out.println("<input type='time' name='checkInTime' value='" + (checkInTime != null ? checkInTime.toString() : "") + "'>");
+                                out.println("<input type='time' name='checkInTime' id='checkInTime_" + requestID + "' value='" + (checkInTime != null ? checkInTime.toString() : "") + "'>");
                                 out.println("<input type='hidden' name='securityID' value='" + securityID + "'>");
-                                out.println("<button onclick=\"confirmSubmission()\" type='submit'>Submit</button>");
+                                out.println("<button type='button' onclick=\"handleSubmission(event, 'checkIn', " + requestID + ")\">Check In</button>");
                                 out.println("</form>");
                                 out.println("</td>");
                                 out.println("<td>");
                                 out.println("<form action='RecordCheckInOutServlet' method='POST'>");
                                 out.println("<input type='hidden' name='action' value='checkOut_" + requestID + "'>");
-                                out.println("<input type='time' name='checkOutTime' value='" + (checkOutTime != null ? checkOutTime.toString() : "") + "'>");
+                                out.println("<input type='time' name='checkOutTime' id='checkOutTime_" + requestID + "' value='" + (checkOutTime != null ? checkOutTime.toString() : "") + "'>");
                                 out.println("<input type='hidden' name='securityID' value='" + securityID + "'>");
-                                out.println("<button onclick=\"confirmSubmission()\" type='submit'>Submit</button>");
+                                out.println("<button type='button' onclick=\"handleSubmission(event, 'checkOut', " + requestID + ")\">Check Out</button>");
                                 out.println("</form>");
                                 out.println("</td>");
                                 out.println("</tr>");
@@ -204,10 +204,23 @@
             </tbody>
         </table>
         <script>
-            function confirmSubmission(formId) {
-                alert("Submission successful!");
-            }
+            function handleSubmission(event, action, requestID) {
+                const currentTime = new Date().toLocaleTimeString('en-GB', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
 
+                const timeInputId = action === 'checkIn' ? 'checkInTime_' + requestID : 'checkOutTime_' + requestID;
+                document.getElementById(timeInputId).value = currentTime;
+
+                const confirmationMessage = action === 'checkIn' ? 'Are you sure you want to check in?' : 'Are you sure you want to check out?';
+                if (confirm(confirmationMessage)) {
+                    document.getElementById(timeInputId).form.submit();
+                    event.target.style.display = 'none';
+                } else {
+                    event.preventDefault();
+                }
+            }
         </script>
     </body>
 </html>

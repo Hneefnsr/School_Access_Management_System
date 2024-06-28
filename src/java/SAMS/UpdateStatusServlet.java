@@ -4,10 +4,6 @@
  */
 package SAMS;
 
-/**
- *
- * @author usee
- */
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -30,6 +26,13 @@ public class UpdateStatusServlet extends HttpServlet {
         int requestID = Integer.parseInt(request.getParameter("requestID"));
         String newStatus = request.getParameter("newStatus");
         int teacherID = (int) request.getSession().getAttribute("teacherID");
+        String notes = request.getParameter("notes");
+
+        // Log received parameters
+        System.out.println("Request ID: " + requestID);
+        System.out.println("New Status: " + newStatus);
+        System.out.println("Teacher ID: " + teacherID);
+        System.out.println("Notes: " + notes);
 
         // Database connection details
         String dbURL = "jdbc:mysql://localhost:3306/school_access_management";
@@ -42,11 +45,12 @@ public class UpdateStatusServlet extends HttpServlet {
             Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
             // Insert data into the approval table
-            String insertApprovalQuery = "INSERT INTO approval (decision, teacherID, requestID) VALUES (?, ?, ?)";
+            String insertApprovalQuery = "INSERT INTO approval (decision, teacherID, requestID, notes) VALUES (?, ?, ?, ?)";
             PreparedStatement approvalStatement = connection.prepareStatement(insertApprovalQuery);
             approvalStatement.setString(1, newStatus);
             approvalStatement.setInt(2, teacherID);
             approvalStatement.setInt(3, requestID);
+            approvalStatement.setString(4, notes);
             approvalStatement.executeUpdate();
             approvalStatement.close();
 
