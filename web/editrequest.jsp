@@ -189,7 +189,7 @@
         </header>
 
         <div id="sign-up-button">Edit Request</div>
-        <form id="visitorForm" action="updateRequest.jsp" method="post">
+        <form id="visitorForm" action="updateRequest" method="post">
             <%
                 // Retrieve the requestID parameter from the URL
                 int requestID = Integer.parseInt(request.getParameter("requestID"));
