@@ -13,7 +13,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Pending Form Lists</title>
+        <title>Requests List</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -239,31 +239,32 @@
             function approveRequest(requestID) {
                 var notes = prompt("Please enter notes for approval:");
                 if (notes === null || notes.trim() === "") {
-                    // User cancelled the prompt or entered empty notes
-                    return;
+                    return; // User cancelled the prompt or entered empty notes
                 }
-                console.log("Approve Notes: ", notes);
                 updateStatus(requestID, 'Approved', notes);
             }
 
             function rejectRequest(requestID) {
                 var notes = prompt("Please enter notes for rejection:");
                 if (notes === null || notes.trim() === "") {
-                    // User cancelled the prompt or entered empty notes
-                    return;
+                    return; // User cancelled the prompt or entered empty notes
                 }
-                console.log("Reject Notes: ", notes);
                 updateStatus(requestID, 'Rejected', notes);
             }
 
             function updateStatus(requestID, newStatus, notes) {
-                console.log("Update Status Request - ID: ", requestID, " Status: ", newStatus, " Notes: ", notes);
+                console.log("Update Status Request - ID:", requestID, "Status:", newStatus, "Notes:", notes);
 
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        alert(xhr.responseText);
-                        location.reload();
+                    if (xhr.readyState == 4) {
+                        if (xhr.status == 200) {
+                            alert(xhr.responseText);
+                            location.reload();
+                        } else {
+                            console.error("Error updating status:", xhr.responseText);
+                            alert("Error updating status: " + xhr.responseText);
+                        }
                     }
                 };
 
@@ -271,6 +272,7 @@
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.send("requestID=" + requestID + "&newStatus=" + newStatus + "&notes=" + encodeURIComponent(notes));
             }
+
         </script>
 
         <footer>

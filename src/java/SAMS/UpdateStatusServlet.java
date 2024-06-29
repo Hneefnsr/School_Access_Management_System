@@ -21,7 +21,6 @@ public class UpdateStatusServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Retrieve parameters from the AJAX request
         int requestID = Integer.parseInt(request.getParameter("requestID"));
         String newStatus = request.getParameter("newStatus");
         int teacherID = (int) request.getSession().getAttribute("teacherID");
@@ -71,4 +70,5 @@ public class UpdateStatusServlet extends HttpServlet {
             response.getWriter().write("Error: " + e.getMessage());
         }
     }
+
 }

@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="https://fontawesome.com/icons/check-to-slot?f=classic&s=solid" integrity="sha512-xxx" crossorigin="anonymous" />
 
 
-        <title>Pending Form Lists</title>
+        <title>Requests List</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
