@@ -142,7 +142,6 @@
 
         </header>
         <div id="sign-up-button">Request List</div>
-
         <div class="container">
             <table id="visits-table">
                 <thead>

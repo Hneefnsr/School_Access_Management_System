@@ -247,7 +247,7 @@
 
         </header>
 
-        <div id="sign-up-button">Profile Information</div>
+        <div id="sign-up-button">Hi <%=FirstName%> <%=LastName%> &#128075;</div>
         <br>
         <div class="container">
             <form id="profileForm">

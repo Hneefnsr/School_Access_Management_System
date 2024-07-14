@@ -175,6 +175,7 @@
                         <th>Time</th>
                         <th>Status</th>
                         <th></th>
+                        <th>Notes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -193,7 +194,7 @@
                             Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
                             // Retrieve pending requests for the specific visitor
-                            String selectQuery = "SELECT * FROM request WHERE visitorID = ?";
+                            String selectQuery = "SELECT r.*, a.notes FROM request r LEFT JOIN approval a ON r.requestID = a.requestID WHERE r.visitorID = ?";
                             PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
                             preparedStatement.setInt(1, visitorID);
                             ResultSet resultSet = preparedStatement.executeQuery();
@@ -205,6 +206,7 @@
                                 String date = resultSet.getString("visitDate");
                                 String time = resultSet.getString("visitTime");
                                 String status = resultSet.getString("visitStatus");
+                                String notes = resultSet.getString("notes");
 
                                 // Add a row to the table
                                 out.println("<tr>");
@@ -227,6 +229,7 @@
                                     out.println("<button onclick=\"deleteRequest(" + resultSet.getInt("requestID") + ")\">Delete</button>");
                                 }
                                 out.println("</td>");
+                                out.println("<td>" + (notes != null ? notes : "") + "</td>");
 
                                 rowNumber++;
                             }
